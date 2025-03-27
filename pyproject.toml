@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{ include = "task_manager" }]
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = ">=3.11,<3.13"
 django = "^5.1.7"
 gunicorn = "^23.0.0"
 django-bootstrap4 = "^25.1"
