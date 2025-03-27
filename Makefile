@@ -28,7 +28,9 @@ lint:
 	poetry run flake8 --ignore=E501 task_manager
 
 tests:
-	poetry run python3 manage.py test
+	poetry run python3 manage.py migrate --noinput
+	poetry run pytest -vv
+
 
 tests-cov:
 	poetry run coverage run ./manage.py test
