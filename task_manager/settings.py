@@ -10,17 +10,15 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
-import os
-from pathlib import Path
-from dotenv import load_dotenv
 import dj_database_url
-
+import os
+from dotenv import load_dotenv
+from pathlib import Path
 
 env_path = os.path.join('.', '.env')
 load_dotenv(dotenv_path=env_path)
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -31,14 +29,13 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-
-
 ALLOWED_HOSTS = [
     'localhost',
     'webserver',
     '0.0.0.0',
     '127.0.0.1',
-    'https://python-project-52-hvii.onrender.com']
+    'python-project-52-hvii.onrender.com',
+]
 
 AUTH_USER_MODEL = 'users.Users'
 
@@ -102,7 +99,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'task_manager.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
@@ -112,8 +108,6 @@ DATABASES = {
         conn_max_age=600
     )
 }
-
-
 
 if os.getenv('DATABASE_URL'):
     db_from_env = dj_database_url.config(conn_max_age=600)
