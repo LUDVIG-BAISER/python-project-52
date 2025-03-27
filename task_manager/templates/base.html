@@ -1,0 +1,28 @@
+{% load i18n %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>{{title}}</title>
+    {% load static %}
+    <link href="{% static 'bootstrap.min.css' %}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="{% static 'headers.css' %}" rel="stylesheet">
+    {% load bootstrap4 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript jquery='full' %}
+  </head>
+  
+  <body class="d-flex flex-column min-vh-100">
+    {% include "navigation.html" %}
+    <div class="container">
+      {% if messages %}
+        {% bootstrap_messages %}
+      {% endif %}
+          
+      {% block content %}
+      {% endblock %}
+    </div>
+    <p> </p>
+  </body>
+</html>

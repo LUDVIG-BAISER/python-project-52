@@ -1,0 +1,38 @@
+{% load i18n %}
+{% block navigation %}
+<div class="container">
+    <header class="navbar-custom d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+
+
+        <!-- Навигация сверху слева-->
+        <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+            <li><a href="{% url 'index' %}" class="navbar-brand">{% translate 'Task manager' %}</a></li>
+            <li><a href="{% url 'home_users' %}" class="nav-link px-2 link-secondary">{% trans "Users" %}</a></li>
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'home_statuses' %}" class="nav-link px-2 link-secondary">{% trans "Statuses" %}</a></li>
+            <li><a href="{% url 'home_labels' %}" class="nav-link px-2 link-secondary">{% trans "Labels" %}</a></li>
+            <li><a href="{% url 'home_tasks' %}" class="nav-link px-2 link-secondary">{% trans "Tasks" %}</a></li>
+            {% endif %}
+        </ul>
+
+        <!-- Навигация сверху справа-->
+        <div class="col-md-3 text-end">
+            {% if user.is_authenticated %}
+            <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">{% trans 'Logout' %}</button>
+            </form>
+            {% else %}
+            <a href="{% url 'login' %}">
+                <button type="button" class="btn btn-outline-primary me-2">{% trans "Login" %}</button>
+            </a>
+
+            <a href="{% url 'create_user' %}">
+                <button type="button" class="btn btn-primary">{% trans "Registration" %}</button>
+            </a>
+            {% endif %}
+        </div>
+
+    </header>
+</div>
+{% endblock %}
