@@ -23,12 +23,8 @@
         <td>{{ u.get_full_name }}</td>
         <td>{{ u.date_joined|date:"d.m.Y" }}</td>
         <td>
-            {% if u == user %}
-                [<a href="{{ u.id }}/update/">{% trans 'Edit' %}</a>]
-                [<a href="{{ u.id }}/delete/">{% trans 'Delete' %}</a>]
-            {% endif %}
-
-
+            [<a href="{{ u.id }}/update/">{% trans 'Edit' %}</a>]
+            [<a href="{{ u.id }}/delete/">{% trans 'Delete' %}</a>]
         </td>
     </tr>
     {% endfor %}
