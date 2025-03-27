@@ -23,9 +23,11 @@
         <td>{{ u.get_full_name }}</td>
         <td>{{ u.date_joined|date:"d.m.Y" }}</td>
         <td>
-            {% if user != u %}
-            [<a href="{% url 'delete_user' u.id %}">{% trans 'Delete' %}</a>]
+            {% if u == user %}
+                [<a href="{{ u.id }}/update/">{% trans 'Edit' %}</a>]
+                [<a href="{{ u.id }}/delete/">{% trans 'Delete' %}</a>]
             {% endif %}
+
 
         </td>
     </tr>
