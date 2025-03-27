@@ -9,11 +9,11 @@ class CRUD_Users_Test(TestCase):
     @classmethod
     def setUpTestData(cls):
         Users.objects.create(
-            first_name='Ivan',
-            last_name='Grozniy',
-            username='IvGroz',
-            email='ivan@google.ru',
-            password='Iv123'
+            first_name='Vitya',
+            last_name='loh',
+            username='VL',
+            email='VLoh@google.ru',
+            password='666123'
         )
         Users.objects.create(
             first_name='Mariya',
@@ -32,20 +32,20 @@ class CRUD_Users_Test(TestCase):
         resp = self.client.post(
             reverse('create_user'),
             {
-                'first_name': 'Alexey',
-                'last_name': 'Navalny',
-                'username': 'FBK',
-                'password1': 'iloveputin',
-                'password2': 'iloveputin',
+                'first_name': 'SIN',
+                'last_name': 'DEAVOLA',
+                'username': '228_loh',
+                'password1': 'PROGREV_KOLTA',
+                'password2': 'PROGREV_KOLTA',
             }
         )
         self.assertEqual(resp.status_code, 302)
         self.assertRedirects(resp, reverse('login'))
 
         user = Users.objects.last()
-        self.assertEqual(user.first_name, 'Alexey')
-        self.assertEqual(user.last_name, 'Navalny')
-        self.assertEqual(user.username, 'FBK')
+        self.assertEqual(user.first_name, 'SIN')
+        self.assertEqual(user.last_name, 'DEAVOLA')
+        self.assertEqual(user.username, '228_loh')
 
         '''Проверка наличия нового пользователя на сайте'''
         resp = self.client.get(reverse('home_users'))

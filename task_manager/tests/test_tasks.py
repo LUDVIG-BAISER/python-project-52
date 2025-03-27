@@ -10,11 +10,11 @@ class CRUD_Tasks_Test(TestCase):
 
     def setUp(self):
         Users.objects.create(
-            first_name='Alexey',
-            last_name='Navalny',
-            username='FBK',
-            email='root@fbk.ru',
-            password='iloveputin'
+            first_name='SIN',
+            last_name='DEAVOLA',
+            username='228_loh',
+            email='root@preispodia.com',
+            password='PROGREV_KOTLA'
         )
         self.user = Users.objects.get(id=1)
 
