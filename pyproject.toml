@@ -21,7 +21,14 @@ dj-database-url = "^2.3.0"
 [tool.poetry.group.dev.dependencies]
 flake8 = "5.0.4"
 coverage = "^7.0.3"
+pytest = "^8.3.5"
+pytest-django = "^4.8.0"
+
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "task_manager.settings"
+python_files = ["tests_*.py"]
