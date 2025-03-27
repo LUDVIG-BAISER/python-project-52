@@ -29,6 +29,3 @@ pytest-django = "^4.8.0"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "task_manager.settings"
-python_files = ["tests_*.py"]
