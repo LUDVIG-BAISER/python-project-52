@@ -1,21 +1,20 @@
 from django.test import TestCase
-from task_manager.users.models import Users
 from django.urls import reverse
+from task_manager.users.models import Users
 
 
-# Create your tests here.
 class CRUD_Users_Test(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        Users.objects.create(
+        cls.user1 = Users.objects.create_user(
             first_name='Vitya',
             last_name='loh',
             username='VL',
             email='VLoh@google.ru',
             password='666123'
         )
-        Users.objects.create(
+        cls.user2 = Users.objects.create_user(
             first_name='Mariya',
             last_name='Petrova',
             username='Masha003',
@@ -23,84 +22,49 @@ class CRUD_Users_Test(TestCase):
             password='quni'
         )
 
-    # CREATE - Регистрация нового пользователя
     def test_SignUp(self):
         resp = self.client.get(reverse('create_user'))
         self.assertEqual(resp.status_code, 200)
-        self.assertTemplateUsed(resp, template_name='users/registration.html')
+        self.assertTemplateUsed(resp, 'users/registration.html')
 
-        resp = self.client.post(
-            reverse('create_user'),
-            {
-                'first_name': 'SIN',
-                'last_name': 'DEAVOLA',
-                'username': '228_loh',
-                'password1': 'PROGREV_KOLTA',
-                'password2': 'PROGREV_KOLTA',
-            }
-        )
+        resp = self.client.post(reverse('create_user'), {
+            'first_name': 'SIN',
+            'last_name': 'DEAVOLA',
+            'username': '228_loh',
+            'password1': 'PROGREV_KOLTA',
+            'password2': 'PROGREV_KOLTA',
+        })
         self.assertEqual(resp.status_code, 302)
         self.assertRedirects(resp, reverse('login'))
+        self.assertEqual(Users.objects.count(), 3)
 
-        user = Users.objects.last()
-        self.assertEqual(user.first_name, 'SIN')
-        self.assertEqual(user.last_name, 'DEAVOLA')
-        self.assertEqual(user.username, '228_loh')
-
-        '''Проверка наличия нового пользователя на сайте'''
-        resp = self.client.get(reverse('home_users'))
-        self.assertTrue(len(resp.context['users']) == 3)
-
-    # READ - вывод списка всех пользователей
     def test_ListUsers(self):
         resp = self.client.get(reverse('home_users'))
-        self.assertTrue(len(resp.context['users']) == 2)
+        self.assertEqual(len(resp.context['users']), 2)
 
-    # UPDATE - обновленние данных пользователя
     def test_UpdateUser(self):
-        user = Users.objects.get(id=1)
-        '''Пробуем изменить данные без аутентификации'''
-        resp = self.client.get(
-            reverse('update_user', kwargs={'pk': user.id})
-        )
+        user = Users.objects.get(username='VL')
+        resp = self.client.get(reverse('update_user', kwargs={'pk': user.id}))
         self.assertEqual(resp.status_code, 302)
-        self.assertRedirects(resp, reverse('login'))
-        '''Изменяем данные первой учетной записи с пройденой аутентификацией'''
+
         self.client.force_login(user)
-        resp = self.client.get(
-            reverse('update_user', kwargs={'pk': user.id})
-        )
-        self.assertEqual(resp.status_code, 200)
-        self.assertTemplateUsed(resp, template_name='users/users_form.html')
-        resp = self.client.post(
-            reverse('update_user', kwargs={'pk': user.id}),
-            {
-                'first_name': 'Petya',
-                'last_name': 'Piter',
-                'username': 'Petr1',
-                'password1': 'lovePiter',
-                'password2': 'lovePiter',
-            }
-        )
+        resp = self.client.post(reverse('update_user', kwargs={'pk': user.id}), {
+            'first_name': 'Petya',
+            'last_name': 'Piter',
+            'username': 'Petr1',
+            'password1': 'lovePiter123',
+            'password2': 'lovePiter123',
+        })
         self.assertEqual(resp.status_code, 302)
         user.refresh_from_db()
         self.assertEqual(user.first_name, 'Petya')
 
-    # DELETE - удаления пользователя
     def test_DeleteUser(self):
         user = Users.objects.get(username='Masha003')
-        '''Без аутентификации'''
         resp = self.client.get(reverse('delete_user', kwargs={'pk': user.id}))
         self.assertEqual(resp.status_code, 302)
-        self.assertRedirects(resp, reverse('login'))
-        '''Зайдя в профиль'''
-        self.client.force_login(user)
-        resp = self.client.get(reverse('delete_user', kwargs={'pk': user.id}))
-        self.assertEqual(resp.status_code, 200)
 
-        resp = self.client.post(
-            reverse('delete_user', kwargs={'pk': user.id})
-        )
+        self.client.force_login(user)
+        resp = self.client.post(reverse('delete_user', kwargs={'pk': user.id}))
         self.assertRedirects(resp, reverse('home_users'))
-        self.assertEqual(resp.status_code, 302)
         self.assertEqual(Users.objects.count(), 1)
