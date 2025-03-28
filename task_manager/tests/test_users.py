@@ -25,7 +25,8 @@ class CRUD_Users_Test(TestCase):
     def test_SignUp(self):
         resp = self.client.get(reverse('create_user'))
         self.assertEqual(resp.status_code, 200)
-        self.assertTemplateUsed(resp, 'users/registration.html')
+        self.assertTemplateUsed(resp,
+                                'users/registration.html')
 
         resp = self.client.post(reverse('create_user'), {
             'first_name': 'SIN',
@@ -44,11 +45,13 @@ class CRUD_Users_Test(TestCase):
 
     def test_UpdateUser(self):
         user = Users.objects.get(username='VL')
-        resp = self.client.get(reverse('update_user', kwargs={'pk': user.id}))
+        resp = self.client.get(reverse('update_user',
+                                       kwargs={'pk': user.id}))
         self.assertEqual(resp.status_code, 302)
 
         self.client.force_login(user)
-        resp = self.client.post(reverse('update_user', kwargs={'pk': user.id}), {
+        resp = self.client.post(reverse('update_user',
+                                        kwargs={'pk': user.id}), {
             'first_name': 'Petya',
             'last_name': 'Piter',
             'username': 'Petr1',
@@ -61,10 +64,12 @@ class CRUD_Users_Test(TestCase):
 
     def test_DeleteUser(self):
         user = Users.objects.get(username='Masha003')
-        resp = self.client.get(reverse('delete_user', kwargs={'pk': user.id}))
+        resp = self.client.get(reverse('delete_user',
+                                       kwargs={'pk': user.id}))
         self.assertEqual(resp.status_code, 302)
 
         self.client.force_login(user)
-        resp = self.client.post(reverse('delete_user', kwargs={'pk': user.id}))
+        resp = self.client.post(reverse('delete_user',
+                                        kwargs={'pk': user.id}))
         self.assertRedirects(resp, reverse('home_users'))
         self.assertEqual(Users.objects.count(), 1)

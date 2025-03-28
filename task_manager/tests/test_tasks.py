@@ -39,5 +39,5 @@ class CRUD_Tasks_Test(TestCase):
         self.client.force_login(self.user)  # И потом с логином
         for u in urls:
             resp = self.client.get(u)
-            # Ожидаем 200 только если задача с pk=1 существует — может потребоваться создать task
+
             self.assertIn(resp.status_code, [200, 404])

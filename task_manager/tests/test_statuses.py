@@ -28,9 +28,11 @@ class CRUD_Statuses_Test(TestCase):
         self.assertEqual(resp1.status_code, 302)
         resp2 = self.client.get(reverse('home_statuses'))
         self.assertEqual(resp2.status_code, 302)
-        resp3 = self.client.get(reverse('update_status', kwargs={'pk': 1}))
+        resp3 = self.client.get(reverse('update_status'
+                                        , kwargs={'pk': 1}))
         self.assertEqual(resp3.status_code, 302)
-        resp4 = self.client.get(reverse('delete_status', kwargs={'pk': 1}))
+        resp4 = self.client.get(reverse('delete_status',
+                                        kwargs={'pk': 1}))
         self.assertEqual(resp4.status_code, 302)
 
         self.client.force_login(self.user)
@@ -38,13 +40,16 @@ class CRUD_Statuses_Test(TestCase):
         self.assertEqual(resp1.status_code, 200)
         resp2 = self.client.get(reverse('home_statuses'))
         self.assertEqual(resp2.status_code, 200)
-        resp3 = self.client.get(reverse('update_status', kwargs={'pk': 1}))
+        resp3 = self.client.get(reverse('update_status',
+                                        kwargs={'pk': 1}))
         self.assertEqual(resp3.status_code, 200)
-        resp4 = self.client.get(reverse('delete_status', kwargs={'pk': 1}))
+        resp4 = self.client.get(reverse('delete_status',
+                                        kwargs={'pk': 1}))
         self.assertEqual(resp4.status_code, 200)
 
     def test_CreateStatus(self):
-        resp = self.client.post(reverse('create_status'), {'name': 'new_status'})
+        resp = self.client.post(reverse('create_status'), {'name':
+                                                               'new_status'})
         self.assertEqual(resp.status_code, 302)
         self.assertEqual(Statuses.objects.count(), 4)
 
@@ -54,7 +59,8 @@ class CRUD_Statuses_Test(TestCase):
 
     def test_UpdateStatus(self):
         status = Statuses.objects.get(pk=1)
-        self.client.post(reverse('update_status', kwargs={'pk': 1}), {'name': 'updated'})
+        self.client.post(reverse('update_status', kwargs={'pk': 1}), {'name':
+                                                                          'updated'})
         status.refresh_from_db()
         self.assertEqual(status.name, 'updated')
 

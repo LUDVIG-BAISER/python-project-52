@@ -29,9 +29,11 @@ class CRUD_Labels_Test(TestCase):
         self.assertEqual(resp1.status_code, 302)
         resp2 = self.client.get(reverse('home_labels'))
         self.assertEqual(resp2.status_code, 302)
-        resp3 = self.client.get(reverse('update_label', kwargs={'pk': 1}))
+        resp3 = self.client.get(reverse('update_label',
+                                        kwargs={'pk': 1}))
         self.assertEqual(resp3.status_code, 302)
-        resp4 = self.client.get(reverse('delete_label', kwargs={'pk': 1}))
+        resp4 = self.client.get(reverse('delete_label',
+                                        kwargs={'pk': 1}))
         self.assertEqual(resp4.status_code, 302)
 
         '''Залогинимся'''
@@ -40,13 +42,16 @@ class CRUD_Labels_Test(TestCase):
         self.assertEqual(resp1.status_code, 200)
         resp2 = self.client.get(reverse('home_labels'))
         self.assertEqual(resp2.status_code, 200)
-        resp3 = self.client.get(reverse('update_label', kwargs={'pk': 1}))
+        resp3 = self.client.get(reverse('update_label',
+                                        kwargs={'pk': 1}))
         self.assertEqual(resp3.status_code, 200)
-        resp4 = self.client.get(reverse('delete_label', kwargs={'pk': 1}))
+        resp4 = self.client.get(reverse('delete_label',
+                                        kwargs={'pk': 1}))
         self.assertEqual(resp4.status_code, 200)
 
     def test_CreateLabel(self):
-        resp = self.client.post(reverse('create_label'), {'name': 'gavgav'})
+        resp = self.client.post(reverse('create_label'), {'name':
+                                                              'gavgav'})
         self.assertEqual(resp.status_code, 302)
         self.assertRedirects(resp, reverse('home_labels'))
         resp = self.client.get(reverse('home_labels'))
@@ -68,7 +73,8 @@ class CRUD_Labels_Test(TestCase):
 
     def test_DeleteStatus(self):
         self.assertEqual(Labels.objects.count(), 3)
-        resp = self.client.post(reverse('delete_label', kwargs={'pk': 3}))
+        resp = self.client.post(reverse('delete_label',
+                                        kwargs={'pk': 3}))
         self.assertEqual(resp.status_code, 302)
         self.assertEqual(Labels.objects.count(), 2)
         self.assertEqual(Labels.objects.get(pk=1).name, 'label1')
