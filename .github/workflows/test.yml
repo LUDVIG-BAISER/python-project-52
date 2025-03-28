@@ -1,6 +1,10 @@
-name: Django CI with Coverage
+name: Django Tests with Coverage
 
-on: [push]
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   test:
@@ -8,11 +12,11 @@ jobs:
 
     services:
       postgres:
-        image: postgres:13
+        image: postgres:15
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: postgres
+          POSTGRES_DB: test_db
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_pass
         ports: ['5432:5432']
         options: >-
           --health-cmd pg_isready
@@ -20,28 +24,36 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
+    env:
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      DATABASE_URL: postgres://test_user:test_pass@localhost:5432/test_db
+      ROLLBAR_ACCESS_TOKEN: ${{ secrets.ROLLBAR_ACCESS_TOKEN }}
+      DJANGO_SETTINGS_MODULE: task_manager.settings
+
     steps:
-      - uses: actions/checkout@v3
+    - name: Checkout repo
+      uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.12'
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.12
 
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
+    - name: Install Poetry
+      run: pip install poetry
 
-      - name: Install dependencies
-        run: poetry install
+    - name: Install dependencies
+      run: poetry install
 
-      - name: Run tests with coverage
-        run: |
-          poetry run coverage run manage.py test
-          poetry run coverage xml
+    - name: Run tests with coverage
+      run: |
+        poetry run coverage run manage.py test
+        poetry run coverage xml
 
-      - name: Upload coverage to Code Climate
-        uses: paambaati/codeclimate-action@v5.0.0
-        with:
-          coverageLocations: coverage.xml:coverage.py
-        env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+    - name: Upload coverage to Code Climate
+      uses: paambaati/codeclimate-action@v4.0.0
+      with:
+        coverageCommand: echo "already generated"
+        debug: true
+      env:
+        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
